@@ -6,8 +6,7 @@ Content-Type: application/json
   "name": "Mohammed Alami",
   "email": "mohammed.alami@gmail.com",
   "address": "Avenue Hassan II, Casablanca",
-  "dateOfBirth": "1985-03-15",
-  "registeredDate": "2024-01-10"
+  "dateOfBirth": "1985-03-15"
 }
 
 ###
