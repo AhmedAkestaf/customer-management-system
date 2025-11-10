@@ -60,6 +60,10 @@ public class CustomerService {
 
 
     }
+    public void deleteCustomer(UUID id) {
+        customerRepository.deleteById(id);
+    }
+
 
 
 }
