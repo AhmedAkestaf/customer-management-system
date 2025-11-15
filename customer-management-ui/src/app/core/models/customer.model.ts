@@ -1,5 +1,5 @@
 // Interface For  the  response backend (GET)
-export interface Customer {
+export interface CustomerResponse {
   id: string;
   name: string;
   email: string;
@@ -15,3 +15,4 @@ export interface CustomerRequest {
   dateOfBirth: string;
   registeredDate: string;
 }
+

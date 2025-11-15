@@ -17,6 +17,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/customers")
+@CrossOrigin(origins = "http://localhost:4200")
 @Tag(name = "Customer", description = "API for managing Customers")
 public class CustomerController {
 
@@ -32,6 +33,14 @@ public class CustomerController {
         List<CustomerResponseDTO> customers = customerService.getCustomers();
         return ResponseEntity.ok().body(customers);
     }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Get Customer by id ")
+    public ResponseEntity<CustomerResponseDTO> getCustomer(@PathVariable UUID id) {
+        CustomerResponseDTO customer = customerService.getCustomer(id);
+        return ResponseEntity.ok().body(customer);
+    }
+
 
     @PostMapping
     @Operation(summary = "Create a new Customer")

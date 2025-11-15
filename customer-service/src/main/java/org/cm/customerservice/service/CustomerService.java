@@ -4,6 +4,8 @@ import org.cm.customerservice.dto.CustomerRequestDTO;
 import org.cm.customerservice.dto.CustomerResponseDTO;
 import org.cm.customerservice.exception.CustomerNotFoundException;
 import org.cm.customerservice.exception.EmailAlreadyExistsException;
+import org.cm.customerservice.grpc.WalletGrpcServiceClient;
+import org.cm.customerservice.kafka.kafkaProducer;
 import org.cm.customerservice.mapper.CustomerMapper;
 import org.cm.customerservice.model.Customer;
 import org.cm.customerservice.repository.CustomerRepository;
@@ -16,9 +18,15 @@ import java.util.UUID;
 @Service
 public class CustomerService {
     private final CustomerRepository customerRepository;
+    private final WalletGrpcServiceClient walletServiceGrpcClient;
+    private final kafkaProducer kafkaProducer;
 
-    public CustomerService(CustomerRepository customerRepository) {
+    public CustomerService(CustomerRepository customerRepository
+            , WalletGrpcServiceClient walletServiceGrpcClient, kafkaProducer kafkaProducer) {
+
         this.customerRepository = customerRepository;
+        this.walletServiceGrpcClient = walletServiceGrpcClient;
+        this.kafkaProducer = kafkaProducer;
     }
 
     public List<CustomerResponseDTO> getCustomers() {
@@ -28,13 +36,25 @@ public class CustomerService {
 
     }
 
+
+    public CustomerResponseDTO getCustomer(UUID id) {
+        Customer customer = customerRepository.findById(id).orElseThrow(
+                () -> new CustomerNotFoundException("Customer not found with ID: " + id));
+        return CustomerMapper.toDTO(customer);
+    }
+
+
     public CustomerResponseDTO createCustomer(CustomerRequestDTO customerRequestDTO) {
         if (customerRepository.existsByEmail(customerRequestDTO.getEmail())) {
             throw new EmailAlreadyExistsException("A customer with email "
-                              + " already exists" + customerRequestDTO.getEmail());
+                    + " already exists" + customerRequestDTO.getEmail());
         }
 
         Customer newCustomer = customerRepository.save(CustomerMapper.toModel(customerRequestDTO));
+
+        walletServiceGrpcClient.createWallet(newCustomer.getId().toString(), newCustomer.getName(), newCustomer.getEmail());
+
+        kafkaProducer.sendEvent(newCustomer);
 
         return CustomerMapper.toDTO(newCustomer);
     }
@@ -43,7 +63,7 @@ public class CustomerService {
         Customer customer = customerRepository.findById(id).orElseThrow(
                 () -> new CustomerNotFoundException("Customer not found with ID: " + id));
 
-        if (customerRepository.existsByEmailAndIdNot(customerRequestDTO.getEmail(),id)) {
+        if (customerRepository.existsByEmailAndIdNot(customerRequestDTO.getEmail(), id)) {
             throw new EmailAlreadyExistsException("A customer with email "
                     + " already exists" + customerRequestDTO.getEmail());
         }
@@ -58,12 +78,11 @@ public class CustomerService {
         return CustomerMapper.toDTO(updatedCustomer);
 
 
-
     }
+
     public void deleteCustomer(UUID id) {
         customerRepository.deleteById(id);
     }
-
 
 
 }

@@ -1,0 +1,7 @@
+GRPC localhost:9001/WalletService/CreateWallet
+
+{
+  "customerId": "124455" ,
+  "name": "Said Lkhlifi",
+  "email": "saidlkhlifi@gmail.com"
+}
