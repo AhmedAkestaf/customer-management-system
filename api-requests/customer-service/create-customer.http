@@ -5,7 +5,7 @@ Content-Type: application/json
 {
   "name": "Said Rahid",
   "email": "Said.rahid@gmail.com",
-  "address": "Avenue Hassan II, Casablanca",
+  "address": "Avenue Hassan II, Casablanca  ",
   "dateOfBirth": "2000-03-15",
   "registeredDate": "2024-11-15"
 }
