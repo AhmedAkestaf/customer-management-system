@@ -2,6 +2,8 @@ package org.cm.authservice.service;
 
 import io.jsonwebtoken.JwtException;
 import org.cm.authservice.dto.LoginRequestDTO;
+import org.cm.authservice.dto.RegisterRequestDTO;
+import org.cm.authservice.exception.EmailAlreadyExistsException;
 import org.cm.authservice.model.User;
 import org.cm.authservice.repository.UserRepository;
 import org.cm.authservice.util.JwtUtil;
@@ -43,6 +45,21 @@ public class AuthService {
         catch (JwtException e) {
             return false;
         }
+    }
+
+    public User register(RegisterRequestDTO registerRequestDTO) {
+        if (userService.existsByEmail(registerRequestDTO.getEmail())) {
+            throw new EmailAlreadyExistsException("Email already registered");
+        }
+
+        User newUser = new User();
+        newUser.setEmail(registerRequestDTO.getEmail());
+        newUser.setPassword(passwordEncoder.encode(registerRequestDTO.getPassword()));
+        newUser.setRole(registerRequestDTO.getRole() != null ?
+                registerRequestDTO.getRole() : "USER");
+        newUser.setName(registerRequestDTO.getName());
+
+        return userService.save(newUser);
     }
 }
 

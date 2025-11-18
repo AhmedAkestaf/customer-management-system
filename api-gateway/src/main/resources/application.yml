@@ -36,18 +36,3 @@ spring:
           filters:
             - RewritePath=/api-docs/auth,/v3/api-docs
 
-      globals:
-        corsConfigurations:
-          '[/**]':
-            allowedOrigins:
-              - "http://localhost:4200"
-              - "http://localhost:4201"
-            allowedMethods:
-              - GET
-              - POST
-              - PUT
-              - DELETE
-              - OPTIONS
-            allowedHeaders: "*"
-            allowCredentials: true
-            maxAge: 3600

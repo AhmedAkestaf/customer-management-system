@@ -1,0 +1,14 @@
+POST http://localhost:4004/auth/register
+Content-Type: application/json
+
+{
+  "email" : "Khalid@gmail.com",
+  "name" : "Khalid",
+  "password" : "motdepasse"
+}
+
+
+
+
+
+###

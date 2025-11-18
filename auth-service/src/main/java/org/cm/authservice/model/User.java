@@ -14,6 +14,9 @@ public class User {
     @Column(unique = true, nullable = false)
     private String email;
 
+    @Column(unique = true, nullable = false)
+    private String name;
+
     @Column(nullable = false)
     private String password;
 
@@ -26,6 +29,13 @@ public class User {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
