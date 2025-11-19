@@ -1,19 +1,47 @@
-syntax= "proto3";
+syntax = "proto3";
 
 option java_multiple_files = true;
 option java_package = "wallet";
+option java_outer_classname = "WalletServiceProto";
+
+package wallet;
 
 service WalletService {
   rpc CreateWallet (WalletRequest) returns (WalletResponse);
+  rpc GetWalletByCustomerId (GetWalletRequest) returns (WalletResponse);
+  rpc GetBalance (GetBalanceRequest) returns (BalanceResponse);
 }
 
-message WalletRequest{
+message WalletRequest {
   string customerId = 1;
   string name = 2;
   string email = 3;
+  optional string currency = 4;
 }
 
-message WalletResponse{
+message WalletResponse {
   string walletId = 1;
-  string status = 2;
+  string customerId = 2;
+  string name = 3;
+  string email = 4;
+  string balance = 5;
+  string status = 6;
+  string currency = 7;
+  string createdAt = 8;
+  string updatedAt = 9;
+}
+
+message GetWalletRequest {
+  string customerId = 1;
+}
+
+message GetBalanceRequest {
+  string walletId = 1;
+}
+
+message BalanceResponse {
+  string walletId = 1;
+  string balance = 2;
+  string currency = 3;
+  string status = 4;
 }

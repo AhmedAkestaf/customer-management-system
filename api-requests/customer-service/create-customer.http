@@ -1,6 +1,8 @@
 ### Creates a new customer entity
-POST http://localhost:4000/customers
+POST http://localhost:4004/api/customers
 Content-Type: application/json
+Authorization: Bearer {{token}}
+
 
 {
   "name": "Said Rahid",

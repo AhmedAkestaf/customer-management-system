@@ -9,7 +9,10 @@ import org.cm.customerservice.kafka.kafkaProducer;
 import org.cm.customerservice.mapper.CustomerMapper;
 import org.cm.customerservice.model.Customer;
 import org.cm.customerservice.repository.CustomerRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import wallet.WalletResponse;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,6 +20,7 @@ import java.util.UUID;
 
 @Service
 public class CustomerService {
+    private static final Logger log = LoggerFactory.getLogger(CustomerService.class);
     private final CustomerRepository customerRepository;
     private final WalletGrpcServiceClient walletServiceGrpcClient;
     private final kafkaProducer kafkaProducer;
@@ -52,7 +56,20 @@ public class CustomerService {
 
         Customer newCustomer = customerRepository.save(CustomerMapper.toModel(customerRequestDTO));
 
-        walletServiceGrpcClient.createWallet(newCustomer.getId().toString(), newCustomer.getName(), newCustomer.getEmail());
+        try {
+            WalletResponse walletResponse = walletServiceGrpcClient.createWallet(
+                    newCustomer.getId().toString(),
+                    newCustomer.getName(),
+                    newCustomer.getEmail()
+            );
+
+            log.info("Wallet created for customer {} with walletId: {}",
+                    newCustomer.getId(), walletResponse.getWalletId());
+
+        } catch (Exception e) {
+            log.error("Failed to create wallet for customer: {}", newCustomer.getId(), e);
+        }
+
 
         kafkaProducer.sendEvent(newCustomer);
 
