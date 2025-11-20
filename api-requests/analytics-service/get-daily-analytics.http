@@ -1,0 +1,5 @@
+### GET request to example server
+GET http://localhost:4004/api/analytics/daily/2025-11-20
+Authorization: Bearer {{token}}
+
+###

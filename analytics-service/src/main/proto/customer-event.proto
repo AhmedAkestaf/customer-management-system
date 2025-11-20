@@ -1,12 +1,19 @@
-syntax="proto3";
+syntax = "proto3";
 
 package customer.events;
 
 option java_multiple_files = true;
+option java_package = "customer.events";
+option java_outer_classname = "CustomerEventProto";
 
-message CustomerEvent{
+message CustomerEvent {
   string customerId = 1;
   string name = 2;
   string email = 3;
-  string event_type = 4;
+  string eventType = 4;
+  int64 timestamp = 5;
+
+  optional string address = 6;
+
+
 }

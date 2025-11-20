@@ -1,4 +1,5 @@
 ### GET request to get customer by id
-GET http://localhost:4000/customers/223e4567-e89b-12d3-a456-426614174014
+GET http://localhost:4004/api/customers/30df953d-f933-4477-a483-8d75e565903e
+Authorization: Bearer {{token}}
 
 ###

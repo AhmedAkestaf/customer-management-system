@@ -92,6 +92,8 @@ public class CustomerService {
 
         Customer updatedCustomer = customerRepository.save(customer);
 
+        kafkaProducer.sendUpdateEvent(updatedCustomer);
+
         return CustomerMapper.toDTO(updatedCustomer);
 
 
@@ -99,6 +101,7 @@ public class CustomerService {
 
     public void deleteCustomer(UUID id) {
         customerRepository.deleteById(id);
+        kafkaProducer.sendDeleteEvent(id.toString());
     }
 
 
